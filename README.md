@@ -1,13 +1,11 @@
 # README
+Rails API server that will render a list of images on get request.\
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Technologies
 
-Things you may want to cover:
+* Ruby 2.7.0
 
-* Ruby version
-
-* System dependencies
+* Rails 6.0.2.1
 
 * Configuration
 
