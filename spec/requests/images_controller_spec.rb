@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe V1::ImagesController do
   before do
-    image1 =  Image.create url: "https://picsum.photos/id/12"
-    image2 = Image.create url: "https://picsum.photos/id/44"
-    image3 = Image.create url: "https://picsum.photos/id/48"
+    image1 =  Image.create url: "https://picsum.photos/id/12", dimensions: ["400/200", "300/300"]
+    image2 = Image.create url: "https://picsum.photos/id/44", dimensions: ["250/250"]
+    image3 = Image.create url: "https://picsum.photos/id/48", dimensions: ["100/100"]
     host! 'api.example.com'
   end
 
@@ -45,6 +45,19 @@ describe V1::ImagesController do
     it 'recieves json with "records", "entries_count", "pages_per_limit" and "page" keys' do
       get v1_images_path(per_page: 2, page: 2)
       expect(json_response.keys).to eq(["records", "entries_count", "pages_per_limit", "page"])
+    end
+  end
+
+  context "it requests all available image dimensions for filter referrence" do
+    before :each do
+      get dimensions_v1_images_path
+    end
+    it "receives json with 'dimensions' key and array of strings as a value" do
+      expect(json_response['dimensions'].count).to be 4
+    end
+
+    it "receives an array of uniq dimensions" do
+      expect(json_response['dimensions'].count).to be json_response['dimensions'].uniq.count
     end
   end
 end
