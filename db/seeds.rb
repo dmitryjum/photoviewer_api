@@ -9,4 +9,11 @@ require 'csv'
 
 list = CSV.read("#{Rails.root}/lib/assets/image_urls.csv").flatten
 list.shift
-list.each {|u| Image.find_or_create_by!(url: u.split('/').first(5).join('/'))}
+list.each do |u|
+  split_u = u.split('/')
+  url = split_u.first(5).join('/')
+  dims = split_u.last(2).join('/')
+  img = Image.find_or_create_by!(url: url)
+  img.dimensions << dims
+  img.save!
+end
