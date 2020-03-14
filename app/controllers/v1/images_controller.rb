@@ -1,6 +1,6 @@
 class V1::ImagesController < ApplicationController
   def index
-    @images = Image.paginate(params)
+    @images = Image.where_params_are(params).paginate(params)
     render json: @images, status: 200
   end
 
