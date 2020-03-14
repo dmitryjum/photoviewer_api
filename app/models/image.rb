@@ -3,7 +3,13 @@ class Image < ApplicationRecord
   validates_presence_of :url
   validates_uniqueness_of :url
 
+  scope :where_dimensions_are, -> (dimensions) {where("dimensions && ?", "{#{[dimensions].flatten.join(',')}}")}
+
   def self.all_dimensions
-    Image.pluck(:dimensions).flatten.uniq
+    pluck(:dimensions).flatten.uniq
+  end
+
+  def self.where_params_are params
+    params[:dimensions].present? ? where_dimensions_are(params[:dimensions]) : all
   end
 end

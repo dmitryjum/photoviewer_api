@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe V1::ImagesController do
   before do
-    image1 =  Image.create url: "https://picsum.photos/id/12", dimensions: ["400/200", "300/300"]
-    image2 = Image.create url: "https://picsum.photos/id/44", dimensions: ["250/250"]
-    image3 = Image.create url: "https://picsum.photos/id/48", dimensions: ["100/100"]
+    @image1 =  Image.create url: "https://picsum.photos/id/12", dimensions: ["400/200", "300/300"]
+    @image2 = Image.create url: "https://picsum.photos/id/44", dimensions: ["250/250"]
+    @image3 = Image.create url: "https://picsum.photos/id/48", dimensions: ["100/100"]
     host! 'api.example.com'
   end
 
@@ -58,6 +58,30 @@ describe V1::ImagesController do
 
     it "receives an array of uniq dimensions" do
       expect(json_response['dimensions'].count).to be json_response['dimensions'].uniq.count
+    end
+  end
+
+  context "it finds images by dimensions in params" do
+    it "receives response with correct count images by one specific dimension" do
+      get v1_images_path(dimensions: "250/250")
+      expect(json_response["records"].count).to be 1
+    end
+
+    it "receives response with correct image by one specific dimension" do
+      get v1_images_path(dimensions: "250/250")
+      expect(json_response["records"].first["url"]).to eq @image2.url
+    end
+
+    it "receives response with correct images by 2 specific dimensions passed as an array" do
+      get v1_images_path(dimensions: ["250/250", "400/200"])
+      expect(json_response["records"].count).to be 2
+      expect(json_response["records"].pluck("id").include?(@image1.id)).to be true
+      expect(json_response["records"].pluck("id").include?(@image2.id)).to be true
+    end
+
+    it "receives paginated response of images by dimensions" do
+      get v1_images_path(dimensions: ["250/250", "400/200", "100/100"], per_page: 2, page: 1)
+      expect(json_response["records"].count).to be 2
     end
   end
 end
