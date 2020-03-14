@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+require 'csv'
+
+list = CSV.read("#{Rails.root}/lib/assets/image_urls.csv").flatten
+list.shift
+list.each {|u| Image.find_or_create_by!(url: u.split('/').first(5).join('/'))}
