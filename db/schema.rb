@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_13_192724) do
+ActiveRecord::Schema.define(version: 2020_03_14_172253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "images", force: :cascade do |t|
     t.text "url"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.text "dimensions", default: [], array: true
+    t.index ["dimensions"], name: "index_images_on_dimensions", using: :gin
   end
 
 end
