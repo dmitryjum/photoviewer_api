@@ -84,4 +84,11 @@ describe V1::ImagesController do
       expect(json_response["records"].count).to be 2
     end
   end
+
+  context "it finds one image by id" do
+    it "finds an images successfuly" do
+      get v1_image_path(@image1.id)
+      expect(json_response["url"]).to eq @image1.url
+    end
+  end
 end
