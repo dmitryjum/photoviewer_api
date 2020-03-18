@@ -90,5 +90,11 @@ describe V1::ImagesController do
       get v1_image_path(@image1.id)
       expect(json_response["url"]).to eq @image1.url
     end
+
+    it "doesn't find an image by id" do
+      get v1_image_path(57)
+      expect(response).not_to be_successful
+      expect(json_response["error"]).to eq "Couldn't find Image with 'id'=57"
+    end
   end
 end
